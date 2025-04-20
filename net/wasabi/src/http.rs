@@ -81,7 +81,7 @@ impl HttpClient {
                 break;
             }
             received.extend_from_slice(&buf[..bytes_read]);
-        };
+        }
 
         match core::str::from_utf8(&received) {
             Ok(response) => HttpResponse::new(response.to_string()),
