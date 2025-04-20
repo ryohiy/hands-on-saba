@@ -5,11 +5,15 @@ use alloc::string::String;
 use saba_core::error::Error;
 use saba_core::http::HttpResponse;
 
-use ::alloc::format;
+use alloc::format;
 use alloc::string::ToString;
-use noli::net::{lookup_host, SocketAddr};
+use noli::net::lookup_host;
 
 use noli::net::SocketAddr;
+
+use noli::net::TcpStream;
+
+use alloc::vec::Vec;
 
 impl HttpClient {
     pub fn new() -> Self {
@@ -26,8 +30,9 @@ impl HttpClient {
                 )))
             }
         };
+
         if ips.len() < 1 {
-            return Err(Errorr::Network("Failed to find IP addresses".to_string()));
+            return Err(Error::Network("Failed to find IP addresses".to_string()));
         };
 
         let socket_addr: SocketAddr = (ips[0], port).into();
@@ -45,9 +50,9 @@ impl HttpClient {
         request.push_str(&path);
         request.push_str(" HTTP/1.1\n");
 
-        request.push_str("HOST: ");
+        request.push_str("Host: ");
         request.push_str(&host);
-        request.push_str('\n');
+        request.push('\n');
         request.push_str("Accept: text/html\n");
         request.push_str("Connection: close\n");
         request.push('\n');
@@ -76,14 +81,9 @@ impl HttpClient {
                 break;
             }
             received.extend_from_slice(&buf[..bytes_read]);
-        }
+        };
 
         match core::str::from_utf8(&received) {
-            Ok(response) => HttpResponse::new(response.to_string()),
-            Err(e) => Err(Error::Network(format!("Invalid received response: {}", e))),
-        }
-
-        match core::from_utf8(&received) {
             Ok(response) => HttpResponse::new(response.to_string()),
             Err(e) => Err(Error::Network(format!("Invalid received response: {}", e))),
         }
