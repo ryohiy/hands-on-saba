@@ -172,7 +172,7 @@ impl HtmlTokenizer {
         }
     }
 
-    fn set_self_closing_flag(&mut self){
+    fn set_self_closing_flag(&mut self) {
         assert!(self.latest_token.is_some());
 
         if let Some(t) = self.latest_token.as_mut() {
@@ -185,7 +185,6 @@ impl HtmlTokenizer {
                 _ => panic!("`latest_token` should be either StartTag"),
             }
         }
-
     }
 }
 
@@ -335,17 +334,17 @@ impl Iterator for HtmlTokenizer {
                     self.start_new_attribute();
                 }
                 State::BeforeAttributeValue => {
-                    if c==' ' {
+                    if c == ' ' {
                         // 空白文字は無視
                         continue;
                     }
 
-                    if c== '"'{
+                    if c == '"' {
                         self.state = State::AttributeValueDoubleQuoted;
                         continue;
                     }
 
-                    if c=='\''{
+                    if c == '\'' {
                         self.state = State::AttributeValueSingleQuoted;
                         continue;
                     }
@@ -354,16 +353,16 @@ impl Iterator for HtmlTokenizer {
                     self.state = State::AttributeValueUnquoted;
                 }
                 State::AttributeValueDoubleQuoted => {
-                    if c =='"'{
+                    if c == '"' {
                         self.state = State::AfterAttributeValueQuoted;
                         continue;
                     }
 
-                    if self.is_eof(){
+                    if self.is_eof() {
                         return Some(HtmlToken::Eof);
                     }
 
-                    self.append_attribute(c,/*is_name*/false);
+                    self.append_attribute(c, /*is_name*/ false);
                 }
                 State::AttributeValueSingleQuoted => {
                     if c == '\'' {
@@ -376,7 +375,6 @@ impl Iterator for HtmlTokenizer {
                     }
 
                     self.append_attribute(c, /*is_name*/ false);
-
                 }
                 State::AttributeValueUnquoted => {
                     if c == ' ' {
@@ -393,7 +391,7 @@ impl Iterator for HtmlTokenizer {
                         return Some(HtmlToken::Eof);
                     }
 
-                    self.append_attribute(c, /*is_name*/false);
+                    self.append_attribute(c, /*is_name*/ false);
                 }
                 State::AfterAttributeValueQuoted => {
                     if c == ' ' {
@@ -483,14 +481,18 @@ impl Iterator for HtmlTokenizer {
                 }
                 State::TemporaryBuffer => {
                     self.reconsume = true;
-                    
+
                     if self.buf.chars().count() == 0 {
                         self.state = State::ScriptData;
                         continue;
                     }
 
                     // 最初の1文字を削除する
-                    let c = self.buf.chars().nth(0).expect("self.buf should at least 1 character");
+                    let c = self
+                        .buf
+                        .chars()
+                        .nth(0)
+                        .expect("self.buf should at least 1 character");
                     self.buf.remove(0);
                     return Some(HtmlToken::Char(c));
                 }
