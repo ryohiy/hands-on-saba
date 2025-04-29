@@ -117,11 +117,11 @@ impl Url {
     }
 
     pub fn path(&self) -> String {
-        self.port.clone()
+        self.path.clone()
     }
 
     pub fn searchpart(&self) -> String {
-        self.port.clone()
+        self.searchpart.clone()
     }
 }
 
