@@ -95,6 +95,9 @@ impl Page {
         };
 
         let layout_view = LayoutView::new(dom, &style);
+        // let mut debug_output = String::new();
+        // write!(&mut debug_output, "{:#?}", layout_view).unwrap();
+        // panic!("{}", debug_output);
 
         self.layout_view = Some(layout_view);
     }
