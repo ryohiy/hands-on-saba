@@ -12,6 +12,8 @@ use alloc::vec::Vec;
 use core::cell::RefCell;
 use core::str::FromStr;
 
+use core::fmt::Write; // for debug
+
 /// https://html.spec.whatwg.org/multipage/parsing.html#the-insertion-mode
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum InsertionMode {
@@ -181,6 +183,12 @@ impl HtmlParser {
 
     pub fn construct_tree(&mut self) -> Rc<RefCell<Window>> {
         let mut token = self.t.next();
+
+        // デバッグ用にトークンを一覧表示
+        // let all_tokens: Vec<_> = self.t.clone().collect();
+        // let mut debug_output = String::new();
+        // write!(&mut debug_output, "{:#?}", all_tokens).unwrap();
+        // panic!("{}", debug_output);
 
         while token.is_some() {
             match self.mode {

@@ -10,6 +10,8 @@ use alloc::rc::Weak;
 use alloc::string::String;
 use core::cell::RefCell;
 
+use core::fmt::Write;
+
 #[derive(Debug, Clone)]
 pub struct Page {
     browser: Weak<RefCell<Browser>>,
@@ -43,6 +45,9 @@ impl Page {
     fn create_frame(&mut self, html: String) {
         let html_tokenizer = HtmlTokenizer::new(html);
         let frame = HtmlParser::new(html_tokenizer).construct_tree();
+        // let mut debug_output = String::new();
+        // write!(&mut debug_output, "{:#?}", frame).unwrap();
+        // panic!("{}", debug_output);
         self.frame = Some(frame);
     }
 }

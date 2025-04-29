@@ -3,6 +3,8 @@ use alloc::vec::Vec;
 
 use crate::renderer::html::attribute::Attribute;
 
+use core::fmt::Write; // for debug
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum State {
     // https://html.spec.whatwg.org/multipage/parsing.html#data-state
@@ -196,11 +198,20 @@ impl Iterator for HtmlTokenizer {
             return None;
         }
 
+        // next()が呼ばれたタイミングで、posの位置からHTML:Tokenが決まるまで、字句を読み込んでいく
+        //  その際、主に状態を利用してTokenを組み立てていく。この字句を読み込んで、Stateを更新しながらTokenを作っていく機構(アルゴリズム)をステートマシンという。
+        //  HTML tokenizerのcoreは next()。
+
+        //  next()はHtml:Token (Char , StartTag 等)を返す
         loop {
             let c = match self.reconsume {
                 true => self.reconsume_input(),
                 false => self.consume_next_input(),
             };
+
+            // let mut debug_output = String::new();
+            // write!(&mut debug_output, "{:#?}", c).unwrap();
+            // panic!("{}", debug_output);
 
             match self.state {
                 State::Data => {
