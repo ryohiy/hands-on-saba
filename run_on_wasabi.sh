@@ -1,5 +1,6 @@
 #!/bin/bash -xe
 
+export DISPLAY=0
 HOME_PATH=$PWD
 TARGET_PATH=$PWD"/build"
 OS_PATH=$TARGET_PATH"/wasabi"
